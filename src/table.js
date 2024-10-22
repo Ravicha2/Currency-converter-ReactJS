@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { json, checkStatus } from './util';
 
 const CurrencyRates = ({ base, date, rates }) => {
   return (
     <div className="row">
-      <div className="col-6 col-md-10 col-lg-11 mb-3">
+      <div className="col-6 col-md-10 col-lg-11 mb-3 mx-3">
           <h2>All {base} Exchange Rate</h2>
           <p>{date}</p>
           <table>
@@ -33,55 +33,75 @@ const CurrencyRates = ({ base, date, rates }) => {
   );
 };
 
-class Watchlist extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            list:{},
-            error:''
-        };
-    }
-    
-    componentDidMount(){
-    fetch(`https://api.frankfurter.app/latest?base=USD`)
-      .then(checkStatus)
-      .then(json)
-      .then((data) => {
-        this.setState({ list: data.rates, error: '' });
-      })
-      .catch((error) => {
-        this.setState({ error: error.message });
-        console.error(error);
-      });
-    }
-    render () {
-        const {list, error} = this.state;
-        return (
-            <div>
+const Watchlist = () => {
+    const [rates, setRates] = useState({});
+    const [error, setError] = useState('');
+  
+    const currencyPairs = {
+      "USD": ["AUD", "JPY", "THB"],  
+      "AUD": ["THB"],           
+      "GBP": ["USD","EUR","THB"]
+    };
+  
+    useEffect(() => {
+      // Fetch exchange rates for each base currency
+      const fetchRates = async () => {
+        try {
+          
+          const usdRates = await fetch(`https://api.frankfurter.app/latest?base=USD`).then(checkStatus).then(json);
+          const audRates = await fetch(`https://api.frankfurter.app/latest?base=AUD`).then(checkStatus).then(json);
+          const gbpRates = await fetch(`https://api.frankfurter.app/latest?base=GBP`).then(checkStatus).then(json);
+  
+          
+          setRates({
+            "USD": usdRates.rates,
+            "AUD": audRates.rates,
+            "GBP": gbpRates.rates
+          });
+          setError('');
+        } catch (error) {
+          setError(error.message);
+        }
+      };
+  
+      fetchRates();
+    }, []);
+  
+    return (
+      <div>
         {error && <p>{error}</p>}
         <h2>Watchlist</h2>
         <table className="table">
           <thead>
             <tr>
-              <th>Currency</th>
+              <th>Base</th>
+              <th>Target</th>
               <th>Rate</th>
+              <th>Inverse Rate</th>
             </tr>
           </thead>
           <tbody>
-            {Object.entries(list).map(([currency, rate]) => (
-              <tr key={currency}>
-                <td>USD{currency}</td>
-                <td>{rate}</td>
-              </tr>
+            {Object.entries(currencyPairs).map(([baseCurrency, targetCurrencies]) => (
+              targetCurrencies.map((targetCurrency) => {
+                const rate = rates[baseCurrency]?.[targetCurrency];
+                if (!rate) return null; // Skip if rate is not available
+  
+                return (
+                  <tr key={`${baseCurrency}-${targetCurrency}`}>
+                    <td>{baseCurrency}</td>
+                    <td>{targetCurrency}</td>
+                    <td>{rate}</td>
+                    <td>{(1 / rate).toFixed(5)}</td> {/* Inverse rate */}
+                  </tr>
+                );
+              })
             ))}
           </tbody>
         </table>
       </div>
-        )
-
-    }
-    
-}
+    );
+  };
+  
 
 class MainRate extends React.Component {
   constructor(props) {

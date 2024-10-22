@@ -14,7 +14,7 @@ const App = () => {
     <Router>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">Exchange Table</Link>
-        <Link to="/cal">Converter</Link>
+        <Link className="navbar-brand" to="/cal">Converter</Link>
       </nav>
       <Switch>
         <Route path="/" exact component={MainRate} />
