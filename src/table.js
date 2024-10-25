@@ -90,8 +90,8 @@ const Watchlist = () => {
                   <tr key={`${baseCurrency}-${targetCurrency}`}>
                     <td>{baseCurrency}</td>
                     <td>{targetCurrency}</td>
-                    <td>{rate}</td>
-                    <td>{(1 / rate).toFixed(5)}</td> {/* Inverse rate */}
+                    <td><Link>{rate}</Link></td>
+                    <td><Link>{(1 / rate).toFixed(5)}</Link></td> {/* Inverse rate */}
                   </tr>
                 );
               })
