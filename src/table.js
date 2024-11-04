@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { json, checkStatus } from './util';
 
+
 const CurrencyRates = ({ base, date, rates }) => {
   return (
     <div className="row">
@@ -90,8 +91,8 @@ const Watchlist = () => {
                   <tr key={`${baseCurrency}-${targetCurrency}`}>
                     <td>{baseCurrency}</td>
                     <td>{targetCurrency}</td>
-                    <td><Link>{rate}</Link></td>
-                    <td><Link>{(1 / rate).toFixed(5)}</Link></td> {/* Inverse rate */}
+                    <td><Link to={`/graph/${baseCurrency}/${targetCurrency}`}>{rate}</Link></td>
+                    <td><Link to={`/graph/${baseCurrency}/${targetCurrency}`}>{(1 / rate).toFixed(5)}</Link></td> {/* Inverse rate */}
                   </tr>
                 );
               })

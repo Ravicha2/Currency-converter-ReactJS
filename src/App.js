@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import MainRate from './table';
+import Graph from './graph';
 import './App.css';
 import Conv from './cal'
 
@@ -19,10 +20,11 @@ const App = () => {
       <Switch>
         <Route path="/" exact component={MainRate} />
         <Route path="/cal" component={Conv} />
+        <Route path="/graph/:baseCurrency/:targetCurrency" component={Graph} />
         <Route component={NotFound} />
       </Switch>
       <footer>
-        <p>By Ravicha, Guided by Altcademy</p>
+        <p>By <a href = "https://comforting-semifreddo-eba349.netlify.app">Ravicha</a>, Guided by <a href = "https://www.altcademy.com">Altcademy</a></p>
       </footer>
     </Router>
   );
