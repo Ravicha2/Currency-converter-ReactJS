@@ -6,7 +6,7 @@ import { json, checkStatus } from './util';
 const CurrencyRates = ({ base, date, rates }) => {
   return (
     <div className="row">
-      <div className="col-6 col-md-10 col-lg-11 mb-3 mx-3">
+      <div className="col-6 col-md-8 col-lg-11 mb-3 mx-3">
           <h2>All {base} Exchange Rate</h2>
           <p>{date}</p>
           <table>
@@ -147,7 +147,7 @@ class MainRate extends React.Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-3">
+          <div className="col-12 col-md-6">
             <form onSubmit={this.handleSubmit} className="form-inline my-4">
               <input
                 type="text"
@@ -159,7 +159,7 @@ class MainRate extends React.Component {
               <button type="submit" className="btn btn-primary mt-2">Submit</button>
             </form>
           </div>
-          <div className='col-6'>
+          <div className='col-12 col-md-6'>
           {error ? (
               <p>{error}</p>
             ) : (
@@ -172,7 +172,7 @@ class MainRate extends React.Component {
               )
             )}
           </div>
-          <div className="col-3">
+          <div className="col-12 col-md-6">
             <Watchlist /> 
           </div>
         </div>

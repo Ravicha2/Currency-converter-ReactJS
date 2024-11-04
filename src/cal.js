@@ -89,7 +89,7 @@ class Conv extends React.Component {
           </div>
 
           <div className="row">
-          <div class="dropdown dropstart col-3 text-center">
+          <div class="dropdown dropend col-3 text-center">
             <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                    {baseCurrency}
             </button>
@@ -123,7 +123,7 @@ class Conv extends React.Component {
             />
         </div>
 
-        <div class="dropdown dropend col-3 text-center">
+        <div class="dropdown dropstart col-3 text-center">
             <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                    {targetCurrency}               
             </button>
