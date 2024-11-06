@@ -5,14 +5,13 @@ import Graph from './graph';
 import './App.css';
 import Conv from './cal'
 
-
 const NotFound = () => {
   return <h2>404 Not Found</h2>;
 }
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/Currency-converter-ReactJS">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <Link className="navbar-brand" to="/">Exchange Table</Link>
         <Link className="navbar-brand" to="/cal">Converter</Link>
@@ -24,7 +23,7 @@ const App = () => {
         <Route component={NotFound} />
       </Switch>
       <footer>
-        <p>By <a href = "https://comforting-semifreddo-eba349.netlify.app">Ravicha</a>, Guided by <a href = "https://www.altcademy.com">Altcademy</a></p>
+        <p>By <a href="https://comforting-semifreddo-eba349.netlify.app">Ravicha</a>, Guided by <a href="https://www.altcademy.com">Altcademy</a></p>
       </footer>
     </Router>
   );
