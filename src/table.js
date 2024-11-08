@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { json, checkStatus } from './util';
 
-
 const CurrencyRates = ({ base, date, rates }) => {
   return (
     <div className="row">
       <div className="col-6 col-md-8 col-lg-11 mb-3 mx-3">
           <h2>All {base} Exchange Rate</h2>
           <p>{date}</p>
-          <table>
+          <table className='table'>
             <thead>
                 <tr>
                     <th>Currency</th>
@@ -21,7 +20,7 @@ const CurrencyRates = ({ base, date, rates }) => {
             {Object.entries(rates).map(([currency, rate]) => (
                 <tr key = {currency}>
                     <td className='w-33'>{currency}</td>
-                    <td className='w-33'>{rate}</td>
+                    <td className='w-33'>{rate.toFixed(5)}</td>
                     <td className='w-25'>{(1/rate).toFixed(5)}</td>
                 </tr>
                 ))}
@@ -44,7 +43,7 @@ const Watchlist = () => {
       "GBP": ["USD","EUR","THB"]
     };
   
-    useEffect(() => {
+    React.useEffect(() => {
       // Fetch exchange rates for each base currency
       const fetchRates = async () => {
         try {
@@ -108,59 +107,70 @@ class MainRate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchTerm: '',
+      currencies: [],
+      selectedCurrency: 'USD',
       result: null,  // Changed to store only a single result object, not an array
       error: '',
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCurrencyChange = this.handleCurrencyChange.bind(this);
+
   }
 
-  handleChange(event) {
-    this.setState({ searchTerm: event.target.value });
+  componentDidMount(){
+    fetch(`https://api.frankfurter.app/currencies`).then(checkStatus).then(json)
+    .then((data) => {
+      this.setState({currencies: Object.keys(data )});
+    })
+    .catch((error) => {
+      this.setState({error:error.message});
+    });
+    this.fetchRates(this.state.selectedCurrency);
   }
+  handleCurrencyChange(event) {
+    const selectedCurrency = event.target.value;
+    this.setState({ selectedCurrency}, () => {
+      this.fetchRates(selectedCurrency)
+    });
+  };
 
-  handleSubmit(event) {
-    event.preventDefault();
-    let { searchTerm } = this.state;
-    searchTerm = searchTerm.trim();
-    if (!searchTerm) {
-      return;
-    }
-
-    fetch(`https://api.frankfurter.app/latest?base=${searchTerm}`)
-      .then(checkStatus)
-      .then(json)
-      .then((data) => {
-        this.setState({ result: data, error: '' });
-      })
-      .catch((error) => {
-        this.setState({ error: error.message });
-        console.error(error);
-      });
+  fetchRates(baseCurrency) {
+    fetch(`https://api.frankfurter.app/latest?base=${baseCurrency}`).then(checkStatus).then(json)
+    .then((data) => {
+      this.setState({result:data, error: ''});
+    })
+    .catch((error) => {
+      this.setState({error: error.message});
+      console.error('Error fetching rate', error);
+    });
   }
-
   render() {
-    const { searchTerm, result, error } = this.state;
+    const { currencies, selectedCurrency, result, error } = this.state;
 
     return (
       <div className="container">
         <div className="row">
-          <div className="col-12 col-md-6">
-            <form onSubmit={this.handleSubmit} className="form-inline my-4">
-              <input
-                type="text"
-                className="form-control mr-sm-2"
-                placeholder="USD"
-                value={searchTerm}
-                onChange={this.handleChange}
-              />
-              <button type="submit" className="btn btn-primary mt-2">Submit</button>
+          <div className="col-3">
+            <form className="form-inline my-4">
+              <label htmlFor="currencyDropdown" className="form-label">
+                Select Currency:
+              </label>
+              <select
+                id="currencyDropdown"
+                className="form-control"
+                value={selectedCurrency}
+                onChange={this.handleCurrencyChange}
+              >
+                {currencies.map((currency) => (
+                  <option key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </select>
             </form>
           </div>
-          <div className='col-12 col-md-6'>
-          {error ? (
+          <div className="col-8 my-4 mx-3">
+            {error ? (
               <p>{error}</p>
             ) : (
               result && (
@@ -172,11 +182,11 @@ class MainRate extends React.Component {
               )
             )}
           </div>
-          <div className="col-12 col-md-6">
-            <Watchlist /> 
-          </div>
         </div>
+        <div className='row mt-3'>
+                <Watchlist/>
         </div>
+      </div>
     );
   }
 }
