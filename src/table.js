@@ -20,8 +20,8 @@ const CurrencyRates = ({ base, date, rates }) => {
             {Object.entries(rates).map(([currency, rate]) => (
                 <tr key = {currency}>
                     <td className='w-33'>{currency}</td>
-                    <td className='w-33'>{rate.toFixed(5)}</td>
-                    <td className='w-25'>{(1/rate).toFixed(5)}</td>
+                    <td className='w-33'><Link to={`/graph/${base}/${currency}`}>{rate}</Link></td>
+                    <td className='w-25'>{(1 / rate).toFixed(5)}</td>
                 </tr>
                 ))}
         
