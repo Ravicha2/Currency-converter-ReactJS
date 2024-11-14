@@ -91,7 +91,7 @@ const Watchlist = () => {
                     <td>{baseCurrency}</td>
                     <td>{targetCurrency}</td>
                     <td><Link to={`/graph/${baseCurrency}/${targetCurrency}`}>{rate}</Link></td>
-                    <td><Link to={`/graph/${baseCurrency}/${targetCurrency}`}>{(1 / rate).toFixed(5)}</Link></td> {/* Inverse rate */}
+                    <td>{(1 / rate).toFixed(5)}</td> {/* Inverse rate */}
                   </tr>
                 );
               })
